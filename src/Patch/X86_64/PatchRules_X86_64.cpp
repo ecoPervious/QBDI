@@ -464,4 +464,19 @@ RelocatableInst::SharedPtrVec getTerminator(rword address) {
     return terminator;
 }
 
+// Patch switching the CPU from the default mode to cpuMode
+RelocatableInst::SharedPtrVec getModeSwitchTo(CPUMode cpuMode) {
+    RelocatableInst::SharedPtrVec modeSwitch;
+    // No other mode are currently implemented
+    return modeSwitch;
+}
+
+// Patch switching the CPU from cpuMode to the default mode
+RelocatableInst::SharedPtrVec getModeSwitchFrom(CPUMode cpuMode) {
+    RelocatableInst::SharedPtrVec modeSwitch;
+    // No other mode are currently implemented
+    return modeSwitch;
+}
+
+
 }

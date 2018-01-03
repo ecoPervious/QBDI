@@ -24,6 +24,28 @@
 #include "Platform.h"
 
 // ============================================================================
+// Common Definition
+// ============================================================================
+
+#ifdef __cplusplus
+namespace QBDI {
+#endif // __cplusplus
+
+typedef enum {
+    Default = 0,
+    #if defined(QBDI_ARCH_ARM)
+        ARM = 0,
+        Thumb,
+    #endif
+    COUNT
+} CPUMode;
+
+#ifdef __cplusplus
+}
+#endif // __cplusplus
+
+
+// ============================================================================
 // X86_64 Context
 // ============================================================================
 

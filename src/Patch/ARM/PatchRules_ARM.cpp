@@ -44,7 +44,7 @@ RelocatableInst::SharedPtrVec getExecBlockPrologue() {
     // Restore GPR
     for(unsigned int i = 0; i < NUM_GPR-1; i++)
         append(prologue, LoadReg(Reg(i), Offset(Reg(i))));
-    // Jump selector
+    //Jump selector
     prologue.push_back(
         Ldr(Reg(REG_PC), Offset(offsetof(Context, hostState.selector)))
     );
@@ -89,7 +89,7 @@ PatchRule::SharedPtrVec getDefaultPatchRules() {
         PatchRule(
             Or({
                 OpIs(llvm::ARM::BX),
-                OpIs(llvm::ARM::BX_pred)
+                OpIs(llvm::ARM::BX_pred),
             }),
             {
                 GetOperand(Temp(0), Operand(0)),
@@ -129,7 +129,7 @@ PatchRule::SharedPtrVec getDefaultPatchRules() {
             Or({
                 OpIs(llvm::ARM::BL),
                 OpIs(llvm::ARM::BL_pred),
-                OpIs(llvm::ARM::BLXi)
+                OpIs(llvm::ARM::BLXi),
             }),
             {
                 GetPCOffset(Temp(0), Operand(0)),
@@ -149,7 +149,7 @@ PatchRule::SharedPtrVec getDefaultPatchRules() {
         PatchRule(
             Or({
                 OpIs(llvm::ARM::MOVPCLR),
-                OpIs(llvm::ARM::BX_RET)
+                OpIs(llvm::ARM::BX_RET),
             }),
             {
                 GetPCOffset(Temp(0), Constant(-4)),

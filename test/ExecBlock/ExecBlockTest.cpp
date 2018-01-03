@@ -19,7 +19,7 @@
 
 TEST_F(ExecBlockTest, EmptyBasicBlock) {
     // Allocate ExecBlock
-    QBDI::ExecBlock execBlock(*assembly);
+    QBDI::ExecBlock execBlock(assembly);
     // Write an empty basic block
     QBDI::Patch::Vec empty;
     QBDI::SeqWriteResult res = execBlock.writeSequence(empty.begin(), empty.end(), QBDI::SeqType::Exit);
@@ -28,7 +28,7 @@ TEST_F(ExecBlockTest, EmptyBasicBlock) {
 
 TEST_F(ExecBlockTest, MultipleBasicBlock) {
     // Allocate ExecBlock
-    QBDI::ExecBlock execBlock(*assembly);
+    QBDI::ExecBlock execBlock(assembly);
     // Jit two different terminators 
     QBDI::Patch::Vec terminator1;
     QBDI::Patch::Vec terminator2;
@@ -57,7 +57,7 @@ TEST_F(ExecBlockTest, MultipleBasicBlock) {
 
 TEST_F(ExecBlockTest, BasicBlockOverload) {
     // Allocate ExecBlock
-    QBDI::ExecBlock execBlock(*assembly);
+    QBDI::ExecBlock execBlock(assembly);
     QBDI::Patch::Vec empty;
     QBDI::SeqWriteResult res;
     uint32_t i = 0;

@@ -24,6 +24,7 @@
 #include "llvm/MC/MCInst.h"
 #include "llvm/MC/MCRegisterInfo.h"
 
+#include "Engine/LLVMCPU.h"
 #include "Patch/PatchUtils.h"
 #include "Patch/PatchGenerator.h"
 #include "Patch/PatchCondition.h"
@@ -78,35 +79,32 @@ public:
      *  context.
      *
      * @param[in] patch  A patch containing the current context.
-     * @param[in] MCII   An LLVM MC instruction info context.
+     * @param[in] llvmCPU   The LLVM CPU instance
      *
      * @return True if this instrumentation condition evaluate to true on this patch.
     */
-    bool canBeApplied(const Patch &patch, llvm::MCInstrInfo* MCII) {
-        return condition->test(&patch.metadata.inst, patch.metadata.address, patch.metadata.instSize, MCII);
+    bool canBeApplied(const Patch &patch, LLVMCPU* llvmCPU) {
+        return condition->test(&patch.metadata.inst, patch.metadata.address, patch.metadata.instSize, llvmCPU->getMII());
     }
 
     /*! Instrument a patch by evaluating its generators on the current context. Also handles the
      *  temporary register management for this patch.
      *
      * @param[in] patch  The current patch to instrument.
-     * @param[in] MCII   A LLVM::MCInstrInfo classes used for internal architecture specific
-     *                   queries.
-     * @param[in] MRI    A LLVM::MCRegisterInfo classes used for internal architecture specific
-     *                   queries.
+     * @param[in] llvmCPU   The LLVM CPU instance
     */
-    void instrument(Patch &patch, llvm::MCInstrInfo* MCII, llvm::MCRegisterInfo* MRI) {
+    void instrument(Patch &patch, LLVMCPU* llvmCPU) {
         /* The instrument function needs to handle several different cases. An instrumentation can 
          * be either prepended or appended to the patch and, in each case, can trigger a break to 
          * host.
         */
         RelocatableInst::SharedPtrVec instru;
-        TempManager tempManager(&patch.metadata.inst, MCII, MRI);
+        TempManager tempManager(&patch.metadata.inst, llvmCPU->getMII(), llvmCPU->getMRI());
 
         // Generate the instrumentation code from the original instruction context
         for(PatchGenerator::SharedPtr& g : patchGen) {
             append(instru,
-                g->generate(&patch.metadata.inst, patch.metadata.address, patch.metadata.instSize, &tempManager, nullptr)
+                g->generate(&patch.metadata.inst, patch.metadata.address, patch.metadata.instSize, patch.metadata.cpuMode, &tempManager, nullptr)
             );
         }
 
@@ -126,6 +124,7 @@ public:
                                     &patch.metadata.inst,
                                     patch.metadata.address,
                                     patch.metadata.instSize,
+                                    patch.metadata.cpuMode,
                                     &tempManager,
                                     nullptr
                                )
@@ -141,6 +140,7 @@ public:
                                     &patch.metadata.inst,
                                     patch.metadata.address,
                                     patch.metadata.instSize,
+                                    patch.metadata.cpuMode,
                                     &tempManager,
                                     nullptr
                                )

@@ -45,8 +45,8 @@ public:
      * Output:
      *   MOV REG64 temp, IMM64/REG64 op
     */
-    RelocatableInst::SharedPtrVec generate(const llvm::MCInst* inst,
-        rword address, rword instSize, TempManager *temp_manager, const Patch *toMerge) {
+    RelocatableInst::SharedPtrVec generate(const llvm::MCInst *inst, rword address, rword instSize, 
+        CPUMode cpuMode, TempManager *temp_manager, const Patch *toMerge) {
         if(inst->getOperand(op).isReg()) {
             return {NoReloc(mov64rr(temp_manager->getRegForTemp(temp), inst->getOperand(op).getReg()))};
         }
@@ -78,8 +78,8 @@ public:
      *
      * MOV REG64 temp, IMM64 cst
     */
-    RelocatableInst::SharedPtrVec generate(const llvm::MCInst* inst,
-        rword address, rword instSize, TempManager *temp_manager, const Patch *toMerge) {
+    RelocatableInst::SharedPtrVec generate(const llvm::MCInst *inst, rword address, rword instSize, 
+        CPUMode cpuMode, TempManager *temp_manager, const Patch *toMerge) {
 
         return {Mov(temp_manager->getRegForTemp(temp), cst)};
     }
@@ -123,8 +123,8 @@ public:
      * MOV REG64 temp, IMM64 (op + address + instSize)
      *
     */
-    RelocatableInst::SharedPtrVec generate(const llvm::MCInst* inst,
-        rword address, rword instSize, TempManager *temp_manager, const Patch *toMerge) {
+    RelocatableInst::SharedPtrVec generate(const llvm::MCInst *inst, rword address, rword instSize, 
+        CPUMode cpuMode, TempManager *temp_manager, const Patch *toMerge) {
         if(type == ConstantType) {
             return{Mov(temp_manager->getRegForTemp(temp), Constant(address + instSize + cst))};
         }
@@ -161,8 +161,8 @@ public:
      * else:
      * LEA REG64 temp, MEM64 addr
     */
-    RelocatableInst::SharedPtrVec generate(const llvm::MCInst* inst,
-        rword address, rword instSize, TempManager *temp_manager, const Patch *toMerge) {
+    RelocatableInst::SharedPtrVec generate(const llvm::MCInst *inst, rword address, rword instSize, 
+        CPUMode cpuMode, TempManager *temp_manager, const Patch *toMerge) {
         // Check if this instruction does indeed read something
         if(getReadSize(inst) > 0) {
             // If it is a stack read, return RSP value
@@ -236,8 +236,8 @@ public:
      * else:
      * LEA REG64 temp, MEM64 addr
     */
-    RelocatableInst::SharedPtrVec generate(const llvm::MCInst* inst,
-        rword address, rword instSize, TempManager *temp_manager, const Patch *toMerge) {
+    RelocatableInst::SharedPtrVec generate(const llvm::MCInst *inst, rword address, rword instSize, 
+        CPUMode cpuMode, TempManager *temp_manager, const Patch *toMerge) {
         // Check if this instruction does indeed read something
         if(getWriteSize(inst) > 0) {
             // If it is a stack read, return RSP value
@@ -307,8 +307,8 @@ class GetReadValue : public PatchGenerator, public AutoAlloc<PatchGenerator, Get
      *
      * MOV REG64 temp, MEM64 val
     */
-    RelocatableInst::SharedPtrVec generate(const llvm::MCInst* inst,
-         rword address, rword instSize, TempManager *temp_manager, const Patch *toMerge) {
+    RelocatableInst::SharedPtrVec generate(const llvm::MCInst *inst, rword address, rword instSize, 
+        CPUMode cpuMode, TempManager *temp_manager, const Patch *toMerge) {
         if(getReadSize(inst) > 0) {
             unsigned size = getReadSize(inst);
             unsigned dst = temp_manager->getRegForTemp(temp);
@@ -402,8 +402,8 @@ public:
      *
      * MOV REG64 temp, MEM64 val
     */
-    RelocatableInst::SharedPtrVec generate(const llvm::MCInst* inst,
-         rword address, rword instSize, TempManager *temp_manager, const Patch *toMerge) {
+    RelocatableInst::SharedPtrVec generate(const llvm::MCInst *inst, rword address, rword instSize, 
+        CPUMode cpuMode, TempManager *temp_manager, const Patch *toMerge) {
         if(getWriteSize(inst) > 0) {
             unsigned size = getWriteSize(inst);
             unsigned dst = temp_manager->getRegForTemp(temp);
@@ -497,8 +497,8 @@ public:
      *
      * MOV REG64 temp, REG64 reg
     */
-    RelocatableInst::SharedPtrVec generate(const llvm::MCInst* inst,
-        rword address, rword instSize, TempManager *temp_manager, const Patch *toMerge) {
+    RelocatableInst::SharedPtrVec generate(const llvm::MCInst *inst, rword address, rword instSize, 
+        CPUMode cpuMode, TempManager *temp_manager, const Patch *toMerge) {
         return {Mov(temp_manager->getRegForTemp(dst), src)};
     }
 };
@@ -521,8 +521,8 @@ public:
      *
      * MOV REG64 temp, IMM64 instID
     */
-    RelocatableInst::SharedPtrVec generate(const llvm::MCInst* inst,
-        rword address, rword instSize, TempManager *temp_manager, const Patch *toMerge) {
+    RelocatableInst::SharedPtrVec generate(const llvm::MCInst *inst, rword address, rword instSize, 
+        CPUMode cpuMode, TempManager *temp_manager, const Patch *toMerge) {
 
         return {InstId(mov64ri(temp_manager->getRegForTemp(temp), 0), 1)};
     }
@@ -562,8 +562,8 @@ public:
      *
      * MOV MEM64 DataBlock[offset], REG64 temp
     */
-    RelocatableInst::SharedPtrVec generate(const llvm::MCInst* inst,
-        rword address, rword instSize, TempManager *temp_manager, const Patch *toMerge) {
+    RelocatableInst::SharedPtrVec generate(const llvm::MCInst *inst, rword address, rword instSize, 
+        CPUMode cpuMode, TempManager *temp_manager, const Patch *toMerge) {
         
         if(type == OffsetType) {
             return {Mov(offset, temp_manager->getRegForTemp(temp))};
@@ -603,8 +603,8 @@ public:
      *
      * MOV MEM64 DataBlock[offset], REG64 reg
     */
-    RelocatableInst::SharedPtrVec generate(const llvm::MCInst* inst,
-        rword address, rword instSize, TempManager *temp_manager, const Patch *toMerge) {
+    RelocatableInst::SharedPtrVec generate(const llvm::MCInst *inst, rword address, rword instSize, 
+        CPUMode cpuMode, TempManager *temp_manager, const Patch *toMerge) {
 
         return {Mov(offset, reg)};
     }
@@ -630,8 +630,8 @@ public:
      *
      * MOV REG64 reg, MEM64 DataBlock[offset]
     */
-    RelocatableInst::SharedPtrVec generate(const llvm::MCInst* inst,
-        rword address, rword instSize, TempManager *temp_manager, const Patch *toMerge) {
+    RelocatableInst::SharedPtrVec generate(const llvm::MCInst *inst, rword address, rword instSize, 
+        CPUMode cpuMode, TempManager *temp_manager, const Patch *toMerge) {
 
         return {Mov(reg, offset)};
     }
@@ -650,8 +650,8 @@ public:
      *
      * JMP Offset(Epilogue)
     */
-    RelocatableInst::SharedPtrVec generate(const llvm::MCInst* inst,
-        rword address, rword instSize, TempManager *temp_manager, const Patch *toMerge) {
+    RelocatableInst::SharedPtrVec generate(const llvm::MCInst *inst, rword address, rword instSize, 
+        CPUMode cpuMode, TempManager *temp_manager, const Patch *toMerge) {
 
         return {EpilogueRel(jmp(0), 0, -1)};
     }
@@ -678,8 +678,8 @@ public:
      * MOV REG64 temp, IMM64 (address + InstSize)
      * PUSH REG64 temp
     */
-    RelocatableInst::SharedPtrVec generate(const llvm::MCInst* inst,
-        rword address, rword instSize, TempManager *temp_manager, const Patch *toMerge) {
+    RelocatableInst::SharedPtrVec generate(const llvm::MCInst *inst, rword address, rword instSize, 
+        CPUMode cpuMode, TempManager *temp_manager, const Patch *toMerge) {
         RelocatableInst::SharedPtrVec patch;
 
         append(patch, WriteTemp(temp, Offset(Reg(REG_PC))).generate(inst, address, instSize, temp_manager, nullptr));
@@ -718,8 +718,8 @@ public:
      * ADD RSP, IMM64 deallocation # Optional
      * MOV MEM64 DataBlock[Offset(RIP)], REG64 temp
     */
-    RelocatableInst::SharedPtrVec generate(const llvm::MCInst* inst,
-        rword address, rword instSize, TempManager *temp_manager, const Patch *toMerge) {
+    RelocatableInst::SharedPtrVec generate(const llvm::MCInst *inst, rword address, rword instSize, 
+        CPUMode cpuMode, TempManager *temp_manager, const Patch *toMerge) {
         RelocatableInst::SharedPtrVec patch;
 
         patch.push_back(Popr(temp_manager->getRegForTemp(temp)));

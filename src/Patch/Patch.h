@@ -20,6 +20,7 @@
 
 #include <vector>
 
+#include "Engine/Engine.h"
 #include "Patch/Types.h"
 #include "Patch/RelocatableInst.h"
 
@@ -37,8 +38,9 @@ public:
         metadata.patchSize = 0;
     }
 
-    Patch(llvm::MCInst inst, rword address, rword instSize) {
+    Patch(llvm::MCInst inst, rword address, rword instSize, CPUMode cpuMode) {
         metadata.patchSize = 0;
+        metadata.cpuMode = cpuMode;
         setInst(inst, address, instSize);
     }
 

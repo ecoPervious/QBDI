@@ -101,14 +101,14 @@ public:
         patch.setMerge(merge);
         patch.setModifyPC(modifyPC);
 
-        Reg::Vec used_registers = temp_manager.getUsedRegisters();
+        Reg::Vec usedRegisters = temp_manager.getUsedRegisters();
 
-        for(unsigned int i = 0; i < used_registers.size(); i++) {
-            patch.prepend(SaveReg(used_registers[i], Offset(used_registers[i])));
+        for(unsigned int i = 0; i < usedRegisters.size(); i++) {
+            patch.prepend(SaveReg(usedRegisters[i], Offset(usedRegisters[i])).generate(nullptr, 0, 0, cpuMode, nullptr, nullptr));
         }
 
-        for(unsigned int i = 0; i < used_registers.size(); i++) {
-            patch.append(LoadReg(used_registers[i], Offset(used_registers[i])));
+        for(unsigned int i = 0; i < usedRegisters.size(); i++) {
+            patch.append(LoadReg(usedRegisters[i], Offset(usedRegisters[i])).generate(nullptr, 0, 0, cpuMode, nullptr, nullptr));
         }
 
         return patch;

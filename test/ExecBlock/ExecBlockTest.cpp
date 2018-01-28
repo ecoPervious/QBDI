@@ -34,8 +34,8 @@ TEST_F(ExecBlockTest, MultipleBasicBlock) {
     QBDI::Patch::Vec terminator2;
     terminator1.push_back(QBDI::Patch());
     terminator2.push_back(QBDI::Patch());
-    terminator1[0].append(QBDI::getTerminator(0x42424242));
-    terminator2[0].append(QBDI::getTerminator(0x13371337));
+    terminator1[0].append(QBDI::getTerminator(0x42424242, QBDI::CPUMode::Default));
+    terminator2[0].append(QBDI::getTerminator(0x13371337, QBDI::CPUMode::Default));
     QBDI::SeqWriteResult block1 = execBlock.writeSequence(terminator1.begin(), terminator1.end(), QBDI::SeqType::Exit);
     QBDI::SeqWriteResult block2 = execBlock.writeSequence(terminator2.begin(), terminator2.end(), QBDI::SeqType::Exit);
     // Are the seqID valid?

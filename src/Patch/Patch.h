@@ -36,6 +36,7 @@ public:
     
     Patch() {
         metadata.patchSize = 0;
+        metadata.cpuMode = CPUMode::Default;
     }
 
     Patch(llvm::MCInst inst, rword address, rword instSize, CPUMode cpuMode) {

@@ -23,7 +23,7 @@ namespace QBDI {
  * break to host. It receive in argument a temporary reg which will be used for computations then 
  * finally restored.
 */
-RelocatableInst::SharedPtrVec getBreakToHost(Reg temp) {
+RelocatableInst::SharedPtrVec getBreakToHost(Reg temp, CPUMode cpuMode) {
     RelocatableInst::SharedPtrVec breakToHost;
 
     // Use the temporary register to compute RIP + 29 which is the address which will follow this 

@@ -453,7 +453,7 @@ PatchRule::SharedPtrVec getDefaultPatchRules() {
 }
 
 // Patch allowing to terminate a basic block early by writing address into DataBlock[Offset(RIP)]
-RelocatableInst::SharedPtrVec getTerminator(rword address) {
+RelocatableInst::SharedPtrVec getTerminator(rword address, CPUMode cpuMode) {
     RelocatableInst::SharedPtrVec terminator;
 
     append(terminator, SaveReg(Reg(0), Offset(Reg(0))));
@@ -463,20 +463,5 @@ RelocatableInst::SharedPtrVec getTerminator(rword address) {
 
     return terminator;
 }
-
-// Patch switching the CPU from the default mode to cpuMode
-RelocatableInst::SharedPtrVec getModeSwitchTo(CPUMode cpuMode) {
-    RelocatableInst::SharedPtrVec modeSwitch;
-    // No other mode are currently implemented
-    return modeSwitch;
-}
-
-// Patch switching the CPU from cpuMode to the default mode
-RelocatableInst::SharedPtrVec getModeSwitchFrom(CPUMode cpuMode) {
-    RelocatableInst::SharedPtrVec modeSwitch;
-    // No other mode are currently implemented
-    return modeSwitch;
-}
-
 
 }

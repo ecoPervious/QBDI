@@ -60,7 +60,7 @@ LLVMCPU::LLVMCPU(const std::string& _cpu, const std::string& _arch, const std::v
     llvm::Triple processTriple(llvm::Triple::normalize(llvm::sys::getDefaultTargetTriple()));
     target = llvm::TargetRegistry::lookupTarget(arch, processTriple, error);
     tripleName = processTriple.getTriple();
-    LogDebug("LLVMCPU::LLVMCPU", "Initialized LLVM for target %s", tripleName);
+    LogDebug("LLVMCPU::LLVMCPU", "Initialized LLVM for target %s", tripleName.c_str());
 
     // Allocate all LLVM classes
     MOFI = std::unique_ptr<llvm::MCObjectFileInfo>(

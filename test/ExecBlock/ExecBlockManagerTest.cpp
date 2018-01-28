@@ -92,8 +92,8 @@ TEST_F(ExecBlockManagerTest, MultipleBasicBlockExecution) {
     // Jit two different terminators 
     QBDI::Patch::Vec terminator1 = getEmptyBB(0x42424242);
     QBDI::Patch::Vec terminator2 = getEmptyBB(0x13371337);
-    terminator1[0].append(QBDI::getTerminator(0x42424242));
-    terminator2[0].append(QBDI::getTerminator(0x13371337));
+    terminator1[0].append(QBDI::getTerminator(0x42424242, QBDI::CPUMode::Default));
+    terminator2[0].append(QBDI::getTerminator(0x13371337, QBDI::CPUMode::Default));
     execBlockManager.writeBasicBlock(terminator1);
     execBlockManager.writeBasicBlock(terminator2);
     // Execute the two basic block and get the value of PC from the data block
@@ -114,7 +114,7 @@ TEST_F(ExecBlockManagerTest, Stresstest) {
 
     for(address = 0; address < 1000; address++) {
         QBDI::Patch::Vec terminator = getEmptyBB(address);
-        terminator[0].append(QBDI::getTerminator(address));
+        terminator[0].append(QBDI::getTerminator(address, QBDI::CPUMode::Default));
         execBlockManager.writeBasicBlock(terminator);
         QBDI::ExecBlock *block = execBlockManager.getProgrammedExecBlock(address);
         ASSERT_NE(nullptr, block);

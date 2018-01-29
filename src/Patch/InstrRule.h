@@ -159,21 +159,21 @@ public:
         // Prepend the temporary register saving code to the instrumentation
         Reg::Vec usedRegisters = tempManager.getUsedRegisters();
         for(uint32_t i = 0; i < usedRegisters.size(); i++) {
-            patch.prepend(SaveReg(usedRegisters[i], Offset(usedRegisters[i])).generate(nullptr, 0, 0, patch.metadata.cpuMode, nullptr, nullptr));
+            prepend(instru, SaveReg(usedRegisters[i], Offset(usedRegisters[i])).generate(nullptr, 0, 0, patch.metadata.cpuMode, nullptr, nullptr));
         }
 
         // In the break to host case the first used register is not restored and instead given to
         // the break to host code as a scratch. It will later be restored by the break to host code.
         if(breakToHost) {
             for(uint32_t i = 1; i < usedRegisters.size(); i++) {
-                patch.append(LoadReg(usedRegisters[i], Offset(usedRegisters[i])).generate(nullptr, 0, 0, patch.metadata.cpuMode, nullptr, nullptr));
+                append(instru, LoadReg(usedRegisters[i], Offset(usedRegisters[i])).generate(nullptr, 0, 0, patch.metadata.cpuMode, nullptr, nullptr));
             }
             append(instru, getBreakToHost(usedRegisters[0], patch.metadata.cpuMode));
         }
         // Normal case where we append the temporary register restoration code to the instrumentation
         else {
             for(uint32_t i = 0; i < usedRegisters.size(); i++) {
-                patch.append(LoadReg(usedRegisters[i], Offset(usedRegisters[i])).generate(nullptr, 0, 0, patch.metadata.cpuMode, nullptr, nullptr));
+                append(instru, LoadReg(usedRegisters[i], Offset(usedRegisters[i])).generate(nullptr, 0, 0, patch.metadata.cpuMode, nullptr, nullptr));
             }
         }
 

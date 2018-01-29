@@ -118,8 +118,13 @@ ExecBlock::ExecBlock(Assembly* assembly[CPUMode::COUNT], VMInstanceRef vminstanc
     for(auto &inst: execBlockPrologue) {
         assembly[CPUMode::Default]->writeInstruction(inst->reloc(this, CPUMode::Default), codeStream);
     }
-    // To make sure shadows are addressable from the fist offset
-    codeStream->seek(0x100);
+
+    #if defined(QBDI_ARCH_ARM)
+    // To make sure shadows are addressable from the fist offset under ARM
+    if(codeStream->current_pos() < 0x100) {
+        codeStream->seek(0x100);
+    }
+    #endif
 }
 
 ExecBlock::~ExecBlock() {

@@ -682,8 +682,8 @@ public:
         CPUMode cpuMode, TempManager *temp_manager, const Patch *toMerge) {
         RelocatableInst::SharedPtrVec patch;
 
-        append(patch, WriteTemp(temp, Offset(Reg(REG_PC))).generate(inst, address, instSize, temp_manager, nullptr));
-        append(patch, GetPCOffset(temp, Constant(0)).generate(inst, address, instSize, temp_manager, nullptr));
+        append(patch, WriteTemp(temp, Offset(Reg(REG_PC))).generate(inst, address, instSize, cpuMode, temp_manager, nullptr));
+        append(patch, GetPCOffset(temp, Constant(0)).generate(inst, address, instSize, cpuMode, temp_manager, nullptr));
         patch.push_back(Pushr(temp_manager->getRegForTemp(temp)));
 
         return {patch};
@@ -726,7 +726,7 @@ public:
         if(inst->getNumOperands() == 1 && inst->getOperand(0).isImm()) {
             patch.push_back(Add(Reg(REG_SP), Constant(inst->getOperand(0).getImm())));
         }
-        append(patch, WriteTemp(temp, Offset(Reg(REG_PC))).generate(inst, address, instSize, temp_manager, nullptr));
+        append(patch, WriteTemp(temp, Offset(Reg(REG_PC))).generate(inst, address, instSize, cpuMode, temp_manager, nullptr));
 
         return {patch};
     }
